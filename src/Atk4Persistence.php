@@ -84,7 +84,7 @@ class Atk4Persistence
 
     public function getActor(Persistence $persistence): Atk4SymfonyModel
     {
-        if (static::$actor !== null) {
+        if (null !== static::$actor) {
             return static::$actor;
         }
 
