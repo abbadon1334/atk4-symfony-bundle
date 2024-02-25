@@ -56,28 +56,53 @@ class Atk4Persistence
 
         self::$persistences[$name]->onHook(
             Persistence::HOOK_AFTER_ADD,
-            fx: function (Persistence $persistence, \Atk4\Data\Model $model) {
-                if (is_a($model, Atk4SymfonyModel::class, true)) {
-                    $model->setApp($this->atk4app->getApp());
-                }
+            fx: function (Persistence $persistence, Atk4SymfonyModel $model) {
+                $model->setApp($this->atk4app->getApp());
+
+                $actor = $this->getActor($persistence);
 
                 if (is_a($model, IModelSoftDeletable::class, true)) {
                     ModelHelper::addSoftDeletable($model);
                 }
 
                 if (is_a($model, IModelTrackable::class, true)) {
-                    ModelHelper::addTrackableCreate($model, $this->atk4app->getApp()->getApplicationUser());
-                    ModelHelper::addTrackableUpdate($model, $this->atk4app->getApp()->getApplicationUser());
-                    ModelHelper::addTrackableDelete($model, $this->atk4app->getApp()->getApplicationUser());
+                    ModelHelper::addTrackableCreate($model, $actor);
+                    ModelHelper::addTrackableUpdate($model, $actor);
+                    ModelHelper::addTrackableDelete($model, $actor);
                 }
 
                 if (is_a($model, IModelAuditable::class, true)) {
-                    Audit::addModelAudit($model, $this->atk4app->getApp()->getApplicationUser());
+                    Audit::addModelAudit($model, $actor);
                 }
             }
         );
 
         return self::$persistences[$name];
+    }
+
+    private static ?Atk4SymfonyModel $actor = null;
+
+    public function getActor(Persistence $persistence): Atk4SymfonyModel
+    {
+        if (static::$actor !== null) {
+            return static::$actor;
+        }
+
+        $class = $this->atk4app->getApp()->getUserModel();
+        $actor = new $class($persistence);
+
+        if (is_a($actor, IModelSoftDeletable::class, true)) {
+            ModelHelper::addSoftDeletable($actor);
+        }
+
+        $securityUser = $this->security->getUser();
+        if (null !== $securityUser) {
+            $actor = $actor->loadBy('email', $this->security->getUser()->getUserIdentifier());
+        } else {
+            $actor = $actor->createEntity();
+        }
+
+        return static::$actor = $actor;
     }
 }
 
