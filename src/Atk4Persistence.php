@@ -59,7 +59,9 @@ class Atk4Persistence
             Persistence::HOOK_AFTER_ADD,
             fx: function (Persistence $persistence, Model $model) {
 
-                $model->setApp($this->atk4app->getApp());
+                if ($model instanceof Atk4SymfonyModel) {
+                    $model->setApp($this->atk4app->getApp());
+                }
 
                 $actor = $this->getActor($persistence);
 
