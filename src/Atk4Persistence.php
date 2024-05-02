@@ -3,6 +3,7 @@
 namespace Atk4\Symfony\Module;
 
 use Atk4\Core\Exception;
+use Atk4\Data\Model;
 use Atk4\Data\Persistence;
 use Atk4\Symfony\Module\Atk4\Data\Atk4SymfonyModel;
 use Atk4\Symfony\Module\Atk4\Data\Decorators\IModelAuditable;
@@ -56,7 +57,8 @@ class Atk4Persistence
 
         self::$persistences[$name]->onHook(
             Persistence::HOOK_AFTER_ADD,
-            fx: function (Persistence $persistence, Atk4SymfonyModel $model) {
+            fx: function (Persistence $persistence, Model $model) {
+
                 $model->setApp($this->atk4app->getApp());
 
                 $actor = $this->getActor($persistence);
