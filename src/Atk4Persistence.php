@@ -54,6 +54,9 @@ class Atk4Persistence
             $config['user'],
             $config['pass']
         );
+        self::$persistences[$name]->addMethod('getApp', function() {
+            return $this->atk4app->getApp();
+        });
 
         self::$persistences[$name]->onHook(
             Persistence::HOOK_AFTER_ADD,
