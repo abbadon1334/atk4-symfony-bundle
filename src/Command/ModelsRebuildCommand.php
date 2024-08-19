@@ -118,7 +118,7 @@ class ModelsRebuildCommand extends Command
         $table_exists = $migration->isTableExists($class->table);
 
         if (!$table_exists) {
-            $createFlags = AbstractPlatform::CREATE_INDEXES | AbstractPlatform::CREATE_FOREIGNKEYS;
+            $createFlags = AbstractPlatform::CREATE_INDEXES;// | AbstractPlatform::CREATE_FOREIGNKEYS;
 
             $statements = $migration->getConnection()->getDatabasePlatform()->getCreateTableSQL($migration->table, $createFlags);
 
