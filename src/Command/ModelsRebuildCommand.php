@@ -29,7 +29,7 @@ class ModelsRebuildCommand extends Command
 
     public function __construct(
         protected Atk4App $atk4App,
-        protected Atk4Persistence $atk4Persistence
+        protected Atk4Persistence $atk4Persistence,
     ) {
         parent::__construct();
     }
@@ -118,7 +118,7 @@ class ModelsRebuildCommand extends Command
         $table_exists = $migration->isTableExists($class->table);
 
         if (!$table_exists) {
-            $createFlags = AbstractPlatform::CREATE_INDEXES;// | AbstractPlatform::CREATE_FOREIGNKEYS;
+            $createFlags = AbstractPlatform::CREATE_INDEXES; // | AbstractPlatform::CREATE_FOREIGNKEYS;
 
             $statements = $migration->getConnection()->getDatabasePlatform()->getCreateTableSQL($migration->table, $createFlags);
 

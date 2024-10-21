@@ -9,7 +9,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class UserAuthenticatorEntryPoint implements AuthenticationEntryPointInterface
 {
-    public function start(Request $request, AuthenticationException $authenticationException = null): RedirectResponse
+    public function start(Request $request, ?AuthenticationException $authenticationException = null): RedirectResponse
     {
         // add a custom flash message and redirect to the login page
         $request->getSession()->getFlashBag()->add('note', 'You have to login in order to access this page.');

@@ -17,7 +17,7 @@ class Atk4App
         array $config,
         protected RequestStack $requestStack,
         protected Kernel $kernel,
-        protected Security $security
+        protected Security $security,
     ) {
         $this->config = $this->normalizeSymfonyConfig($config);
         $this->config['container'] = $kernel->getContainer();

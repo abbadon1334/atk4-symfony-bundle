@@ -23,11 +23,11 @@ class Atk4Persistence
     public function __construct(
         private Atk4App $atk4app,
         private array $config,
-        private Security $security
+        private Security $security,
     ) {
     }
 
-    public function getPersistence(string $name = null): Persistence
+    public function getPersistence(?string $name = null): Persistence
     {
         $name = $name ?? 'main';
 
@@ -54,14 +54,13 @@ class Atk4Persistence
             $config['user'],
             $config['pass']
         );
-        self::$persistences[$name]->addMethod('getApp', function() {
+        self::$persistences[$name]->addMethod('getApp', function () {
             return $this->atk4app->getApp();
         });
 
         self::$persistences[$name]->onHook(
             Persistence::HOOK_AFTER_ADD,
             fx: function (Persistence $persistence, Model $model) {
-
                 if ($model instanceof Atk4SymfonyModel) {
                     $model->setApp($this->atk4app->getApp());
                 }
@@ -104,7 +103,7 @@ class Atk4Persistence
 
         $securityUser = $this->security->getUser();
         if (null !== $securityUser) {
-            $actor = $actor->loadBy('email', $this->security->getUser()->getUserIdentifier());
+            $actor = $actor->loadBy($this->atk4app->getApp()->getUserIdentifierField(), $this->security->getUser()->getUserIdentifier());
         } else {
             $actor = $actor->createEntity();
         }

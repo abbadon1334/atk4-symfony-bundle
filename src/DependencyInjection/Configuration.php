@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('user_class')->defaultValue('App\Models\User')->end()
                 ->end()
             ->end()
+            ->scalarNode('identifier_field')->defaultValue('email')->end()
                 ->arrayNode('filesystem')
                 ->arrayPrototype()
                     ->children()

@@ -15,7 +15,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     public function __construct(
         private Atk4App $atk4App,
-        private Atk4Persistence $atk4Persistence
+        private Atk4Persistence $atk4Persistence,
     ) {
     }
 

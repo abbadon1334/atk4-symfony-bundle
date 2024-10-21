@@ -21,19 +21,20 @@ class UserAuthenticator extends AbstractAuthenticator
 
     public function __construct(
         private readonly HttpUtils $httpUtils,
-        private readonly Atk4App $atk4app
+        private readonly Atk4App $atk4app,
     ) {
     }
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('email');
+        $identifierField = $this->atk4app->getApp()->getUserIdentifierField();
+        $identifierValue = $request->request->get($identifierField);
         $password = $request->request->get('password');
 
         return new Passport(
-            new UserBadge($email, function ($userIdentifier) {
+            new UserBadge($identifierValue, function ($userIdentifier) use ($identifierField) {
                 $model = $this->atk4app->getApp()->getModel(\App\Models\User::class);
-                $entity = $model->tryLoadBy('email', $userIdentifier);
+                $entity = $model->tryLoadBy($identifierField, $userIdentifier);
 
                 if (null === $entity) {
                     throw new AuthenticationCredentialsNotFoundException('User not found');

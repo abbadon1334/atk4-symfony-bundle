@@ -29,6 +29,8 @@ class App extends \Atk4\Ui\App
 
     protected string $user_class;
 
+    protected string $identifier_field = 'email';
+
     public function __construct(array $defaults = [])
     {
         if (PHP_SAPI === 'cli') {
@@ -39,6 +41,11 @@ class App extends \Atk4\Ui\App
         }
 
         parent::__construct($defaults);
+    }
+
+    public function getUserIdentifierField(): string
+    {
+        return $this->identifier_field;
     }
 
     protected function emitResponse(): void
@@ -75,7 +82,7 @@ class App extends \Atk4\Ui\App
             return $user->createEntity();
         }
 
-        return $user->loadBy('email', $securityUser->getEmail());
+        return $user->loadBy($this->identifier_field, $securityUser->getUserIdentifier());
     }
 
     public function getStoragePath(string $name, string $fileUrl): string
